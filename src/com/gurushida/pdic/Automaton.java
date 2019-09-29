@@ -80,7 +80,7 @@ public class Automaton {
 			ArrayList<State> array = statesSortedByHeight.get(i);
 			int n = array.size();
 			for (int j = 0; j < n; j++) {
-				for (Transition t : array.get(j).transitions) {
+				for (Transition t : array.get(j).getTransitions()) {
 					t.destination = register.getOrPut(t.destination);
 				}
 			}

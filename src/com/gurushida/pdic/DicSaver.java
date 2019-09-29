@@ -54,8 +54,8 @@ public class DicSaver {
 
         // Let's make sure that all the states reachable from this one are
         // saved first
-        if (state.transitions != null) {
-            for (Transition t : state.transitions) {
+        if (state.getTransitions() != null) {
+            for (Transition t : state.getTransitions()) {
                 save(t.destination, output);
             }
         }
@@ -65,7 +65,7 @@ public class DicSaver {
 
         // Let's encode on 4 bytes the number of transitions and whether or not
         // the state is terminal
-        int nTransitions = state.transitions == null ? 0 : state.transitions.length;
+        int nTransitions = state.getTransitions() == null ? 0 : state.getTransitions().length;
         int stateCode = (nTransitions << 1) + (state.isTerminal() ? 1 : 0);
         output.write((stateCode & 0xFF000000) >> 24);
         output.write((stateCode & 0x00FF0000) >> 16);
@@ -77,7 +77,7 @@ public class DicSaver {
         if (nTransitions == 0) {
             return;
         }
-        for (Transition t : state.transitions) {
+        for (Transition t : state.getTransitions()) {
             // 2 bytes for the character
             output.write((t.letter & 0xFF00) >> 8);
             output.write(t.letter & 0x00FF);

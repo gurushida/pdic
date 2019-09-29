@@ -85,9 +85,9 @@ public class Register {
 	 */
 	private int getSignature(State s) {
 		int hash = s.isTerminal() ? 1 : 0;
-		if (s.transitions != null) {
-			for (int i = 0; i < s.transitions.length; i++) {
-				Transition t = s.transitions[i];
+		if (s.getTransitions() != null) {
+			for (int i = 0; i < s.getTransitions().length; i++) {
+				Transition t = s.getTransitions()[i];
 				hash = hash + (t.letter * 0xFFFF + (((t.destination.hashCode()) >> 2) * 101)) * (11 + 2 * i);
 			}
 		}
