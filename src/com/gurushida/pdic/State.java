@@ -4,7 +4,7 @@ import java.util.*;
 
 public class State implements Comparable<State> {
 
-	boolean terminal;
+	private boolean terminal;
 	Transition[] transitions;
 
 	public State(boolean terminal) {
@@ -149,4 +149,7 @@ public class State implements Comparable<State> {
 		}
 	}
 
+	public boolean isTerminal() {
+		return terminal;
+	}
 }

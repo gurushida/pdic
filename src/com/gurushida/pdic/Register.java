@@ -84,7 +84,7 @@ public class Register {
 	 * as it would slow down other operations.
 	 */
 	private int getSignature(State s) {
-		int hash = s.terminal ? 1 : 0;
+		int hash = s.isTerminal() ? 1 : 0;
 		if (s.transitions != null) {
 			for (int i = 0; i < s.transitions.length; i++) {
 				Transition t = s.transitions[i];

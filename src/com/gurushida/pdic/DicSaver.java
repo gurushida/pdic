@@ -66,7 +66,7 @@ public class DicSaver {
         // Let's encode on 4 bytes the number of transitions and whether or not
         // the state is terminal
         int nTransitions = state.transitions == null ? 0 : state.transitions.length;
-        int stateCode = (nTransitions << 1) + (state.terminal ? 1 : 0);
+        int stateCode = (nTransitions << 1) + (state.isTerminal() ? 1 : 0);
         output.write((stateCode & 0xFF000000) >> 24);
         output.write((stateCode & 0x00FF0000) >> 16);
         output.write((stateCode & 0x0000FF00) >> 8);
