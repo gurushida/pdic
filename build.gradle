@@ -1,0 +1,54 @@
+defaultTasks "jar"
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+sourceSets {
+	sourceSets {
+		main.java.srcDirs = ['src']
+		test.java.srcDirs = ['test']
+	}
+
+}
+
+jar {
+	destinationDir file("$project.projectDir/")
+	archiveName "pdic.jar"
+
+	manifest {
+		attributes "Main-Class": "com.gurushida.pdic.Main"
+	}
+}
+
+task installJar(type: Copy) {
+	dependsOn jar
+    from file("$project.projectDir/pdic.jar")
+    into file("/usr/local/bin/")
+}
+
+task install {
+	dependsOn installJar
+	doLast {
+		if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+			println "This task cannot be executed on Windows."
+		} else {
+			new File("/usr/local/bin/pdic").text = """
+#!/bin/sh
+java -jar /usr/local/bin/pdic.jar "\$@"
+"""
+			exec {
+				executable "sh"
+				args "-c", "chmod a+x /usr/local/bin/pdic"
+			}
+		}
+	}
+}
