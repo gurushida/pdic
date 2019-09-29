@@ -37,11 +37,11 @@ public class Main {
 			}
 		} catch (OutOfMemoryError e) {
 			System.err.println();
-			System.err.println("OUT OF MEMORY ERROR: your dictionary is too big");
+			System.err.println("OUT OF MEMORY ERROR");
 			System.err.println("You must enlarge the heap space used by the java virtual machine");
 			System.err.println("using the options -Xms and -Xmx as follows:");
 			System.err.println();
-			System.err.println("java -XmsMINm -XmxMAXm -jar Goussier.jar -revuz input.dic output.txt");
+			System.err.println("java -XmsMINm -XmxMAXm -jar pdic.jar ...");
 			System.err.println();
 			System.err.println("where MIN and MAX are respectively the initial and maximum heap");
 			System.err.println("sizes in megabytes.");
