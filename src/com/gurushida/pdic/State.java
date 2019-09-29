@@ -149,24 +149,6 @@ public class State implements Comparable<State> {
 		}
 	}
 
-	/**
-	 * @param c a letter
-	 * @return the destination state of the transition tagged by the letter c if
-	 *         any; null otherwise
-	 */
-	public State getNextState(char c) {
-		if (transitions == null) {
-			return null;
-		}
-		int i;
-		for (i = 0; i < transitions.length && c > transitions[i].letter; i++) {
-		}
-		if (i < transitions.length && c == transitions[i].letter) {
-			return transitions[i].destination;
-		}
-		return null;
-	}
-
 	public void addTransitionAtEnd(Transition t) {
 		if (transitions == null) {
 			transitions = new Transition[1];
@@ -191,23 +173,6 @@ public class State implements Comparable<State> {
 			}
 		}
 		return hash;
-	}
-
-	/**
-	 * @param a
-	 * @param b
-	 * @return the longest common prefix of a and b
-	 */
-	private String getLongestCommonPrefix(String a, String b) {
-		int lA = a.length();
-		int lB = b.length();
-		String prefix = "";
-		int limit = (lA < lB) ? lA : lB;
-		int i;
-		for (i = 0; i < limit && a.charAt(i) == b.charAt(i); i++) {
-			prefix = prefix + a.charAt(i);
-		}
-		return prefix;
 	}
 
 }
