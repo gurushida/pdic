@@ -149,18 +149,6 @@ public class State implements Comparable<State> {
 		}
 	}
 
-	public void addTransitionAtEnd(Transition t) {
-		if (transitions == null) {
-			transitions = new Transition[1];
-			transitions[0] = t;
-			return;
-		}
-		Transition[] tmp = new Transition[transitions.length + 1];
-		System.arraycopy(transitions, 0, tmp, 0, transitions.length);
-		tmp[transitions.length] = t;
-		transitions = tmp;
-	}
-
 	/**
 	 * @return a hash code depending on finality, output and transitions
 	 */
