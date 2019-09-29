@@ -6,12 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 public class DicSaver {
 
     private int currentOffset = 0;
-    private HashMap<State, Integer> offsetMap = new HashMap<>();
+    private IdentityHashMap<State, Integer> offsetMap = new IdentityHashMap<>();
     private File file;
     private final State root;
 
