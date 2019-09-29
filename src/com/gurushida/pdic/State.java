@@ -2,7 +2,7 @@ package com.gurushida.pdic;
 
 import java.util.*;
 
-public class State implements Comparable<State> {
+public class State {
 
 	private boolean terminal;
 	private Transition[] transitions;
@@ -90,63 +90,39 @@ public class State implements Comparable<State> {
 		return height;
 	}
 
-	/**
-	 * Comparison method for states.
-	 *
-	 * @param s the state to compare to
-	 * @return 0 if states have same finality and same transitions a non null value
-	 *         if states differ
-	 */
-	public int compareTo(State s) {
-		if (s == null) {
-			return -1;
-		}
-		// if the states are the same, no need to verify anything
-		if (this == s)
-			return 0;
-		if (terminal != s.terminal) {
-			// a final state is greater than a non final one
-			return terminal ? 1 : -1;
-		}
-		// then, we check if they have the same transitions
-		if (transitions == null) {
-			if (s.transitions != null) {
-				// first has no transition, second has => first is before
-				return -1;
-			}
-			// none has transition => they are identical
-			return 0;
-		}
-		if (s.transitions == null) {
-			// first has transition, second has not => first is after
-			return 1;
-		}
-		int l = transitions.length;
-		if (l != s.transitions.length) {
-			// if the first has less transitions, he is before the second
-			return l - s.transitions.length;
-		}
-		for (int i = 0; i < l; i++) {
-			int e = transitions[i].compareTo(s.transitions[i]);
-			if (e != 0) {
-				return e;
-			}
-		}
-		// if we arrive here, then the two states are supposed to be
-		// equivalent
-		return 0;
-	}
-
-	/**
-	 * This is an equals method that is consistent with compareTo
-	 */
-	public @Override boolean equals(Object o) {
-		try {
-			State s = (State) o;
-			return (compareTo(s) == 0);
-		} catch (ClassCastException e) {
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof State)) {
 			return false;
 		}
+
+		State other = (State) o;
+		if (other == this) {
+			return true;
+		}
+
+		if (terminal != other.terminal) {
+			return false;
+		}
+
+		if (transitions == null && other.transitions == null) {
+			return true;
+		}
+
+		if ((transitions == null && other.transitions != null)
+			|| (transitions != null && other.transitions == null)
+			|| (transitions.length != other.transitions.length)) {
+				return false;
+		}
+
+		int l = transitions.length;
+		for (int i = 0; i < l; i++) {
+			int e = transitions[i].compareTo(other.transitions[i]);
+			if (e != 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public boolean isTerminal() {
