@@ -69,7 +69,7 @@ public class Automaton {
 	 * same height.
 	 */
 	public void minimize() {
-		// we allocate an array of arrays for stocking states by height
+		// We allocate an array of arrays for stocking states by height
 		ArrayList<ArrayList<State>> statesSortedByHeight = new ArrayList<ArrayList<State>>();
 		System.out.println("Sorting nodes by height...");
 		root.sortStatesByHeight(statesSortedByHeight);

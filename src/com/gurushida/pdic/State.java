@@ -149,18 +149,4 @@ public class State implements Comparable<State> {
 		}
 	}
 
-	/**
-	 * @return a hash code depending on finality, output and transitions
-	 */
-	public int hashCode2() {
-		int hash = terminal ? 1 : 0;
-		if (transitions != null) {
-			for (int i = 0; i < transitions.length; i++) {
-				Transition t = transitions[i];
-				hash = hash + (t.letter * 0xFFFF + (((t.destination.hashCode()) >> 2) * 101)) * (11 + 2 * i);
-			}
-		}
-		return hash;
-	}
-
 }
