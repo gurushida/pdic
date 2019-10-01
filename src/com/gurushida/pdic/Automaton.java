@@ -30,7 +30,7 @@ public class Automaton {
 	 */
 	private void addSequence(String sequence) {
 		if (sequence == null || sequence.isEmpty()) {
-			throw new RuntimeException("Cannot add a null or empty sequence to the automaton");
+			return;
 		}
 		root.addPath(sequence, 0);
 	}
