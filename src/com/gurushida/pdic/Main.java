@@ -7,6 +7,8 @@ import java.io.IOException;
 public class Main {
 
 	public static void usage() {
+		System.out.println("pdic - An utility to compress/decompress/lookup password lists");
+		System.out.println();
 		System.out.println("Usage:");
 		System.out.println("   compress <in> <out>: given a UTF-8 text file <in>, saves into <out> a binary");
 		System.out.println("                        representation of a minimal automton containing all the");

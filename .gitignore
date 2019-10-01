@@ -31,4 +31,7 @@ hs_err_pid*
 build/
 vcsWorkingDirs/
 all
+list.txt
+list.bin
+lists/
 
