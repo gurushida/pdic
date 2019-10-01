@@ -16,6 +16,9 @@ public class Main {
 		System.out.println("                          duplicate-free list of the sequences contained in the automaton");
 		System.out.println("                          as a UTF-8 text file");
 		System.out.println("");
+		System.out.println("   contains <in> <seq>: given a minimal automaton <in>, indicates whether it contains");
+		System.out.println("                        the given sequence <seq>");
+		System.out.println("");
 	}
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
@@ -28,7 +31,9 @@ public class Main {
 			if (args[0].equals("compress")) {
 				compress(args);
 			} else if (args[0].equals("decompress")) {
-					decompress(args);
+				decompress(args);
+			} else if (args[0].equals("contains")) {
+				contains(args);
 			} else {
 				System.err.println("Invalid parameter: " + args[0]);
 				System.err.println();
@@ -53,12 +58,13 @@ public class Main {
 			System.err.println("Invalid parameter: "+args[0]);
 			System.err.println();
 			usage();
-			return;
+			System.exit(1);
 		}
 		Automaton automaton = new Automaton();
 		automaton.load(new File(args[1]));
 		automaton.minimize();
 		automaton.save(new File(args[2]));
+		System.exit(0);
 	}
 
 	private static void decompress(String args[]) throws FileNotFoundException, IOException {
@@ -66,9 +72,23 @@ public class Main {
 			System.err.println("Invalid parameter: "+args[0]);
 			System.err.println();
 			usage();
-			return;
+			System.exit(1);
 		}
 		BinaryDic dic = new BinaryDic(new File(args[1]));
 		dic.decompress(new File(args[2]));
+		System.exit(0);
+	}
+
+	private static void contains(String args[]) throws FileNotFoundException, IOException {
+		if (args.length < 2) {
+			System.err.println("Invalid parameter: "+args[0]);
+			System.err.println();
+			usage();
+			System.exit(1);
+		}
+		BinaryDic dic = new BinaryDic(new File(args[1]));
+		boolean found = dic.contains(args[2]);
+		System.out.println("'" + args[2] + "' " + (found ? "" : "not ") +"found'");
+		System.exit(found ? 0 : 1);
 	}
 }
