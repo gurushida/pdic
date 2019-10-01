@@ -39,10 +39,7 @@ public class DicSaver {
         try (RandomAccessFile out = new RandomAccessFile(file, "rw")) {
             int rootOffset = offsetMap.get(root);
             out.seek(0);
-            out.write((rootOffset & 0xFF000000) >> 24);
-            out.write((rootOffset & 0x00FF0000) >> 16);
-            out.write((rootOffset & 0x0000FF00) >> 8);
-            out.write(rootOffset & 0x000000FF);
+            BinaryUtil.write(rootOffset, out);
         }
     }
 
@@ -67,28 +64,17 @@ public class DicSaver {
         // the state is terminal
         int nTransitions = state.getTransitions() == null ? 0 : state.getTransitions().length;
         int stateCode = (nTransitions << 1) + (state.isTerminal() ? 1 : 0);
-        output.write((stateCode & 0xFF000000) >> 24);
-        output.write((stateCode & 0x00FF0000) >> 16);
-        output.write((stateCode & 0x0000FF00) >> 8);
-        output.write(stateCode & 0x000000FF);
-        currentOffset += 4;
 
+        currentOffset += BinaryUtil.encode(stateCode, output);
         // Now let's encode the transitions
         if (nTransitions == 0) {
             return;
         }
         for (Transition t : state.getTransitions()) {
-            // 2 bytes for the character
-            output.write((t.letter & 0xFF00) >> 8);
-            output.write(t.letter & 0x00FF);
+            currentOffset += BinaryUtil.encode(t.letter, output);
 
-            // 3 bytes for the offset of the destination state
             int dstOffset = offsetMap.get(t.destination);
-            output.write((dstOffset & 0xFF0000) >> 16);
-            output.write((dstOffset & 0x00FF00) >> 8);
-            output.write(dstOffset & 0x0000FF);
-
-            currentOffset += 5;
+            currentOffset += BinaryUtil.encode(dstOffset, output);
         }
     }
 }

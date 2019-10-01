@@ -1,40 +1,23 @@
 package com.gurushida.pdic;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
+import com.gurushida.pdic.BinaryUtil;
+import com.gurushida.pdic.BinaryUtil.Offset;
 public class BinaryDic {
 
     private File file;
 
     public BinaryDic(File file) {
         this.file = file;
-    }
-
-    private int readInt32Value(int offset, MappedByteBuffer buffer) {
-        return ((buffer.get(offset) & 0xFF) << 24)
-            | ((buffer.get(offset + 1) & 0xFF) << 16)
-            | ((buffer.get(offset + 2) & 0xFF) << 8)
-            | (buffer.get(offset + 3) & 0xFF);
-    }
-
-    private char readcharValue(int offset, MappedByteBuffer buffer) {
-        return (char) (((buffer.get(offset) & 0xFF) << 8) | (buffer.get(offset + 1) & 0xFF));
-    }
-
-    private int read3BytesOffsetValue(int offset, MappedByteBuffer buffer) {
-        return ((buffer.get(offset) & 0xFF) << 16)
-            | ((buffer.get(offset + 1) & 0xFF) << 8)
-            | (buffer.get(offset + 2) & 0xFF);
     }
 
     public void decompress(File output) throws IOException {
@@ -44,16 +27,19 @@ public class BinaryDic {
             OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
             BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
 
+            Offset offset = new Offset(0);
+
             MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
-            int rootOffset = readInt32Value(0, buffer);
+            int rootOffset = BinaryUtil.read(offset, buffer);
 
             StringBuilder sb = new StringBuilder();
-            uncompress(buffer, rootOffset, sb, 0, bufferedWriter);
+            decompress(buffer, rootOffset, sb, 0, bufferedWriter);
         }
     }
 
-    private void uncompress(MappedByteBuffer buffer, int offset, StringBuilder sb, int wordLength, BufferedWriter bufferedWriter) throws IOException {
-        int value = readInt32Value(offset, buffer);
+    private void decompress(MappedByteBuffer buffer, int offset, StringBuilder sb, int wordLength, BufferedWriter bufferedWriter) throws IOException {
+        Offset off = new Offset(offset);
+        int value = BinaryUtil.decode(off, buffer);
         boolean terminal = (value & 1) == 1;
         int nTransitions = value >> 1;
         if (terminal) {
@@ -61,17 +47,12 @@ public class BinaryDic {
             bufferedWriter.append('\n');
         }
 
-        offset += 4;
         for (int i = 0 ; i < nTransitions ; i++) {
-            char c = readcharValue(offset, buffer);
-            offset += 2;
-
-            int dstOffset = read3BytesOffsetValue(offset, buffer);
-            offset += 3;
-
+            char c = (char)BinaryUtil.decode(off, buffer);
+            int dstOffset = BinaryUtil.decode(off, buffer);
             sb.setLength(wordLength);
             sb.append(c);
-            uncompress(buffer, dstOffset, sb, wordLength + 1, bufferedWriter);
+            decompress(buffer, dstOffset, sb, wordLength + 1, bufferedWriter);
         }
     }
 }
